@@ -38,3 +38,13 @@ def all_not_null(*args):
             return False
     return True
 
+
+# 定义请求返回参数的格式
+def result(msg='', success=False, data='', **kwargs):
+    page = kwargs.get('page')
+    total = kwargs.get('total')
+    if page and total:
+        res = {'data': data, 'msg': msg, 'success': success, 'page': page, 'total': total}
+    else:
+        res = {'data': data, 'msg': msg, 'success': success}
+    return res

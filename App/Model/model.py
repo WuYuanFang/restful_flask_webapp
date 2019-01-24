@@ -2,6 +2,7 @@ from datetime import datetime
 from itsdangerous import TimedJSONWebSignatureSerializer as Serializer, SignatureExpired, BadSignature
 from passlib.apps import custom_app_context as pwd_context
 from App import app, db
+from flask import jsonify
 
 
 # 用户将对象转成json格式
@@ -33,8 +34,14 @@ class Student(db.Model, BaseModel):
         self.grade_id = grade_id
 
     def save(self):
-        db.session.add(self)
-        db.session.commit()
+        try:
+            db.session.add(self)
+            db.session.commit()
+        except Exception as err:
+            print(err)
+            db.session.rollback()
+            return False
+        return True
 
 
 # 年级模型
@@ -49,8 +56,14 @@ class Grade(db.Model, BaseModel):
         self.g_name = name
 
     def save(self):
-        db.session.add(self)
-        db.session.commit()
+        try:
+            db.session.add(self)
+            db.session.commit()
+        except Exception as err:
+            print(err)
+            db.session.rollback()
+            return False
+        return True
 
     # 用户将对象转成json格式
     # def to_json(self):
@@ -80,8 +93,14 @@ class User(db.Model, BaseModel):
         return pwd_context.verify(password1, self.password)
 
     def save(self):
-        db.session.add(self)
-        db.session.commit()
+        try:
+            db.session.add(self)
+            db.session.commit()
+        except Exception as err:
+            print(err)
+            db.session.rollback()
+            return False
+        return True
 
     # 生成一个token,默认有效期为1天
     def generate_token(self, expiration=86400):
@@ -120,8 +139,14 @@ class Role(db.Model, BaseModel):
         self.r_name = r_name
 
     def save(self):
-        db.session.add(self)
-        db.session.commit()
+        try:
+            db.session.add(self)
+            db.session.commit()
+        except Exception as err:
+            print(err)
+            db.session.rollback()
+            return False
+        return True
 
 
 # 权限模型
